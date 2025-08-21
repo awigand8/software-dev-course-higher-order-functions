@@ -43,7 +43,10 @@ Step-by-Step:
 2. Use the `filter()` method to apply the callback to the array.
 3. Return the filtered result.
 */
-
+function filterProducts(arr, callFunction){
+  return arr.filter(callFunction);
+}
+let filteredProducts = filterProducts(products, product => product.price >= 500);
 
 /*
 🔹 Task 2: Transform Product Names
@@ -55,21 +58,31 @@ Step-by-Step:
 2. Extract and transform the `name` property to uppercase.
 3. Store the result in a new variable.
 */
+const upperCasedProducts = products.map(products => products.name.toUpperCase());
 
+// 🔹 Task 3: Generate Discounted Prices
 
-/*
-🔹 Task 3: Generate Discounted Prices
+// Write a higher-order function `applyDiscount` that:
+// - Accepts a discount percentage
+// - Returns a function that takes a product and returns a discounted price
 
-Write a higher-order function `applyDiscount` that:
-- Accepts a discount percentage
-- Returns a function that takes a product and returns a discounted price
+// Step-by-Step:
+// 1. Define a function `applyDiscount` that takes `discountPercent`.
+// 2. Return a new function that takes a product object.
+// 3. Use this returned function inside a `map()` call to apply discounts to all products.
+// */
+function applyDiscount(discountPercent){
+  return function (product){
+    return product.price - (product.price * (discountPercent/100));
+  };
+}
 
-Step-by-Step:
-1. Define a function `applyDiscount` that takes `discountPercent`.
-2. Return a new function that takes a product object.
-3. Use this returned function inside a `map()` call to apply discounts to all products.
-*/
-
+const afterDiscount = products.map(product => {
+  const tempProduct = {...product};
+  const temp = applyDiscount(20);
+  tempProduct.price = temp(product);
+  return tempProduct;
+});
 
 /*
 🔹 Task 4: Calculate Total Inventory Value
@@ -81,13 +94,18 @@ Step-by-Step:
 2. Add only the prices of products where `inStock` is true.
 3. Store the total in a new variable.
 */
-
+const totalPrices = products.reduce( function (total, product){
+  if (product.inStock === true){
+    total += product.price;
+  }
+  return total;
+}, 0);
 
 // ============================================
 // 🧪 Console Test Your Work
 // ============================================
 
-// console.log("Filtered products:", ...);
-// console.log("Uppercased names:", ...);
-// console.log("Discounted products:", ...);
-// console.log("Total value in stock:", ...);
+console.log("Filtered products:", filteredProducts);
+console.log("Uppercased names:", upperCasedProducts);
+console.log("Discounted products:", afterDiscount);
+console.log("Total value in stock:", totalPrices);
